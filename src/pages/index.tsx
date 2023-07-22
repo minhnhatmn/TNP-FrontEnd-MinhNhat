@@ -1,3 +1,6 @@
+import { useState } from 'react'
+import * as Tabs from '@radix-ui/react-tabs'
+
 import { CreateTodoForm } from '@/client/components/CreateTodoForm'
 import { TodoList } from '@/client/components/TodoList'
 
@@ -17,19 +20,79 @@ import { TodoList } from '@/client/components/TodoList'
  */
 
 const Index = () => {
+  const [selected, setSelected] = useState('all')
+  const [reload, setReload] = useState(false)
   return (
     <main className="mx-auto w-[480px] pt-12">
       <div className="rounded-12 bg-white p-8 shadow-sm">
         <h1 className="text-center text-4xl font-extrabold text-gray-900">
           Todo App
         </h1>
+        <Tabs.Root className="TabsRoot mt-10" defaultValue="all">
+          <Tabs.List className="TabsList" aria-label="Todolist">
+            <Tabs.Trigger
+              value="all"
+              className={
+                selected == 'all'
+                  ? 'TabsTrigger mr-[10px]  h-[35px]  rounded-[18px]  border-2 border-solid  bg-gray-700 pl-[20px]  pr-[20px] font-bold text-white'
+                  : 'TabsTrigger mr-[10px]  h-[35px]  rounded-[18px]  border-2 border-solid border-[#e2e8f0] pl-[20px] pr-[20px]  font-bold text-[#334155]'
+              }
+              onClick={() => {
+                setSelected('all')
+              }}
+            >
+              All
+            </Tabs.Trigger>
+            <Tabs.Trigger
+              className={
+                selected == 'pending'
+                  ? 'TabsTrigger mr-[10px]  h-[35px]  rounded-[18px]  border-2 border-solid  bg-gray-700 pl-[20px]  pr-[20px] font-bold text-white'
+                  : 'TabsTrigger mr-[10px]  h-[35px]  rounded-[18px]  border-2 border-solid border-[#e2e8f0] pl-[20px] pr-[20px]  font-bold text-[#334155]'
+              }
+              value="pending"
+              onClick={() => {
+                setSelected('pending')
+              }}
+            >
+              Pending
+            </Tabs.Trigger>
+            <Tabs.Trigger
+              className={
+                selected == 'completed'
+                  ? 'TabsTrigger mr-[10px]  h-[35px]  rounded-[18px]  border-2 border-solid  bg-gray-700 pl-[20px]  pr-[20px] font-bold text-white'
+                  : 'TabsTrigger mr-[10px]  h-[35px]  rounded-[18px]  border-2 border-solid border-[#e2e8f0] pl-[20px] pr-[20px]  font-bold text-[#334155]'
+              }
+              value="completed"
+              onClick={() => {
+                setSelected('completed')
+              }}
+            >
+              Completed
+            </Tabs.Trigger>
+          </Tabs.List>
+          <Tabs.Content className="TabsContent" value="all">
+            <div className="pt-10">
+              <TodoList typeLoad={selected} onReload={reload} />
+            </div>
+          </Tabs.Content>
+          <Tabs.Content className="TabsContent" value="pending">
+            <div className="pt-10">
+              <TodoList typeLoad={selected} onReload={reload} />
+            </div>
+          </Tabs.Content>
+          <Tabs.Content className="TabsContent" value="completed">
+            <div className="pt-10">
+              <TodoList typeLoad={selected} onReload={reload} />
+            </div>
+          </Tabs.Content>
+        </Tabs.Root>
 
         <div className="pt-10">
-          <TodoList />
-        </div>
-
-        <div className="pt-10">
-          <CreateTodoForm />
+          <CreateTodoForm
+            onAdd={() => {
+              setReload(!reload)
+            }}
+          />
         </div>
       </div>
     </main>

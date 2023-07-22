@@ -23,18 +23,16 @@ import { api } from '@/utils/client/api'
  * <Enter> right after typing to submit the form (add new todo). Fix this issue.
  */
 
-export const CreateTodoForm = () => {
+export const CreateTodoForm = (props: any) => {
   const [todoBody, setTodoBody] = useState('')
-
-  const apiContext = api.useContext()
 
   const { mutate: createTodo, isLoading: isCreatingTodo } =
     api.todo.create.useMutation({
       onSuccess: () => {
-        apiContext.todo.getAll.refetch()
+        // apiContext.todo.getAll.refetch()
+        props.onAdd(true)
       },
     })
-
   return (
     <form className="group flex items-center justify-between rounded-12 border border-gray-200 py-2 pr-4 focus-within:border-gray-400">
       <label htmlFor={TODO_INPUT_ID} className="sr-only">

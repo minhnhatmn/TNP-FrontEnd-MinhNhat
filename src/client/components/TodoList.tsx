@@ -1,4 +1,4 @@
-import { type SVGProps, useState } from 'react'
+import { type SVGProps, useState, useEffect } from 'react'
 import * as Checkbox from '@radix-ui/react-checkbox'
 import { useAutoAnimate } from '@formkit/auto-animate/react'
 
@@ -63,7 +63,7 @@ import { api } from '@/utils/client/api'
  *  - https://auto-animate.formkit.com
  */
 
-export const TodoList = () => {
+export const TodoList = (ref: any) => {
   const { data: todos = [] } = api.todo.getAll.useQuery(
     {
       statuses: ['completed', 'pending'],
@@ -72,65 +72,60 @@ export const TodoList = () => {
       refetchOnWindowFocus: false,
     }
   )
+  useEffect(() => {
+    changeData(ref.typeLoad)
+    setSelected(ref.typeLoad)
+  }, [ref])
   const [isFirst, setisFirst] = useState(true)
   const apiContext = api.useContext()
   const [animationParent] = useAutoAnimate()
   const { mutate: updateToDo } = api.todoStatus.update.useMutation({
     onSuccess: () => {
-      setisFirst(false)
-      switch (selected) {
-        case 'all':
-          apiContext.todo.getAll
-            .fetch({
-              statuses: ['completed', 'pending'],
-            })
-            .then((value) => {
-              setToDo1(value)
-            })
-          setSelected('all')
-          break
-        case 'completed':
-          apiContext.todo.getAll
-            .fetch({
-              statuses: ['completed'],
-            })
-            .then((value) => {
-              setToDo1(value)
-            })
-          setSelected('completed')
-          break
-        case 'pending':
-          apiContext.todo.getAll
-            .fetch({
-              statuses: ['pending'],
-            })
-            .then((value) => {
-              setToDo1(value)
-            })
-          setSelected('pending')
-          break
-        default:
-          break
-      }
+      reload()
     },
   })
   const { mutate: deleteToDo } = api.todo.delete.useMutation({
     onSuccess: () => {
-      setisFirst(false)
-      // apiContext.todo.getAll.refetch().then((value) => {
-      //   setToDo1(todos);
-      // });
-      apiContext.todo.getAll
-        .fetch({
-          statuses: ['completed', 'pending'],
-        })
-        .then((value) => {
-          setToDo1(value)
-        })
-      setSelected('all')
+      reload()
     },
   })
-
+  function reload() {
+    setisFirst(false)
+    switch (selected) {
+      case 'all':
+        apiContext.todo.getAll
+          .fetch({
+            statuses: ['completed', 'pending'],
+          })
+          .then((value) => {
+            setToDo1(value)
+          })
+        setSelected('all')
+        break
+      case 'completed':
+        apiContext.todo.getAll
+          .fetch({
+            statuses: ['completed'],
+          })
+          .then((value) => {
+            setToDo1(value)
+          })
+        setSelected('completed')
+        break
+      case 'pending':
+        apiContext.todo.getAll
+          .fetch({
+            statuses: ['pending'],
+          })
+          .then((value) => {
+            setToDo1(value)
+          })
+        setSelected('pending')
+        break
+      default:
+        break
+    }
+  }
   const [selected, setSelected] = useState('all')
   const [todos1, setToDo1] = useState(
     api.todo.getAll.useQuery(
@@ -197,7 +192,7 @@ export const TodoList = () => {
 
   return (
     <div data-has-animation={true}>
-      <div className="mb-[10px]">
+      {/* <div className="mb-[10px]">
         <button
           className={
             selected == 'all'
@@ -240,7 +235,7 @@ export const TodoList = () => {
         >
           Completed
         </button>
-      </div>
+      </div> */}
       <ul className="grid grid-cols-1 gap-y-3" ref={animationParent}>
         {isFirst
           ? todos.map((todo) => (
