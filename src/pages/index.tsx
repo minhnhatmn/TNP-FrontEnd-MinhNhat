@@ -70,23 +70,16 @@ const Index = () => {
               Completed
             </Tabs.Trigger>
           </Tabs.List>
-          <Tabs.Content className="TabsContent" value="all">
-            <div className="pt-10">
-              <TodoList typeLoad={selected} onReload={reload} />
-            </div>
-          </Tabs.Content>
-          <Tabs.Content className="TabsContent" value="pending">
-            <div className="pt-10">
-              <TodoList typeLoad={selected} onReload={reload} />
-            </div>
-          </Tabs.Content>
-          <Tabs.Content className="TabsContent" value="completed">
-            <div className="pt-10">
-              <TodoList typeLoad={selected} onReload={reload} />
-            </div>
-          </Tabs.Content>
+          <Tabs.Content className="TabsContent" value="all"></Tabs.Content>
+          <Tabs.Content className="TabsContent" value="pending"></Tabs.Content>
+          <Tabs.Content
+            className="TabsContent"
+            value="completed"
+          ></Tabs.Content>
         </Tabs.Root>
-
+        <div className="pt-10">
+          <TodoList typeLoad={selected} onReload={reload} />
+        </div>
         <div className="pt-10">
           <CreateTodoForm
             onAdd={() => {
